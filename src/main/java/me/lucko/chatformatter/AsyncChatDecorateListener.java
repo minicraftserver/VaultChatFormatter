@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class AsyncChatDecorateListener implements Listener {
     private ChatFormatterPlugin plugin;
-    private final Pattern URL_REGEX = Pattern.compile("(https?://)?[a-z0-9]+(\\.[a-z0-9]+)*(\\.[a-z0-9]{1,10})((/+)[^/ ]*)*", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+    private final Pattern URL_REGEX = Pattern.compile("(https?://)?[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z0-9]{1,10})((/+)[^/ ]*)*", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 
     public AsyncChatDecorateListener(ChatFormatterPlugin chatFormatterPlugin){
         plugin = chatFormatterPlugin;
