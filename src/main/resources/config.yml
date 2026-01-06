@@ -13,4 +13,4 @@
 # {name} ==> the players name
 #
 # format codes: https://docs.advntr.dev/minimessage/format.html#color
-format: "<{prefix}{name}{suffix}> "
+public-chat-format: "<{prefix}{name}{suffix}> "
