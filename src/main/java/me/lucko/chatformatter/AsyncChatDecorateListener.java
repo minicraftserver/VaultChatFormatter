@@ -7,19 +7,16 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.regex.Pattern;
 
+@SuppressWarnings("UnstableApiUsage")
 public class AsyncChatDecorateListener implements Listener {
-    private ChatFormatterPlugin plugin;
     private final Pattern URL_REGEX = Pattern.compile("(https?://)?[a-z0-9-]+(\\.[a-z0-9-]+)*(\\.[a-z0-9]{1,10})((/+)[^/ ]*)*", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
 
-    public AsyncChatDecorateListener(ChatFormatterPlugin chatFormatterPlugin){
-        plugin = chatFormatterPlugin;
-    }
-
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onAsyncChatDecorateEvent(AsyncChatDecorateEvent e){
         Component message = e.originalMessage();
 

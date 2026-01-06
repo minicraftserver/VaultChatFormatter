@@ -2,5 +2,11 @@ name: VaultChatFormatter
 version: '${version}'
 main: me.lucko.chatformatter.ChatFormatterPlugin
 description: VaultChatFormatter is a plugin which formats the chat. wow
-author: Luck
-api-version: 1.21.11
+api-version: '1.21.11'
+
+dependencies:
+  server:
+    Vault:
+      load: BEFORE
+      required: true
+      join-classpath: true

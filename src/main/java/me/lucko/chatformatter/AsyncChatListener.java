@@ -5,6 +5,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import java.util.function.Supplier;
@@ -38,7 +39,7 @@ public class AsyncChatListener implements Listener {
         this.format = plugin.getConfig().getString("format", DEFAULT_FORMAT);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.NORMAL)
     public void onAsyncChat(AsyncChatEvent e){
         e.renderer((source, sourceDisplayName, message, viewer) -> Component.text()
                 .append(formatRank(e.getPlayer()))
@@ -53,7 +54,7 @@ public class AsyncChatListener implements Listener {
             messageFormat = replaceAll(PREFIX_PLACEHOLDER_PATTERN, messageFormat, () -> plugin.getVaultChat().getPlayerPrefix(player));
             messageFormat = replaceAll(SUFFIX_PLACEHOLDER_PATTERN, messageFormat, () -> plugin.getVaultChat().getPlayerSuffix(player));
         }
-        messageFormat = replaceAll(NAME_PLACEHOLDER_PATTERN, messageFormat, () -> player.getName());
+        messageFormat = replaceAll(NAME_PLACEHOLDER_PATTERN, messageFormat, player::getName);
 
         return MiniMessage.miniMessage().deserialize(messageFormat);
     }

@@ -1,9 +1,11 @@
 package me.lucko.chatformatter;
 
+import com.mojang.brigadier.Command;
+import io.papermc.paper.command.brigadier.Commands;
+import io.papermc.paper.plugin.lifecycle.event.types.LifecycleEvents;
 import net.milkbowl.vault.chat.Chat;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
+
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.ServiceRegisterEvent;
@@ -29,7 +31,21 @@ public class ChatFormatterPlugin extends JavaPlugin implements Listener {
         asyncChat.reloadConfigValues();
         refreshVault();
         getServer().getPluginManager().registerEvents(asyncChat, this);
-        getServer().getPluginManager().registerEvents(new AsyncChatDecorateListener(this), this);
+        getServer().getPluginManager().registerEvents(new AsyncChatDecorateListener(), this);
+
+        getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, commands -> {
+          commands.registrar().register(
+                  Commands.literal("vaultchatformatter")
+                          .then(Commands.literal("reload")
+                                  .requires(sender -> sender.getSender().isOp() || sender.getSender().hasPermission("vaultchatformatter.reload"))
+                                  .executes(cmd -> {
+                                      reloadConfig();
+                                      asyncChat.reloadConfigValues();
+                                      cmd.getSource().getSender().sendPlainMessage("Reloaded successfully.");
+                                      return Command.SINGLE_SUCCESS;
+                                  })
+                          ).build());
+        });
     }
 
     private void refreshVault() {
@@ -38,19 +54,6 @@ public class ChatFormatterPlugin extends JavaPlugin implements Listener {
             getLogger().info("New Vault Chat implementation registered: " + (vaultChat == null ? "null" : vaultChat.getName()));
         }
         this.vaultChat = vaultChat;
-    }
-
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (args.length != 0 && args[0].equalsIgnoreCase("reload")) {
-            reloadConfig();
-            asyncChat.reloadConfigValues();
-
-            sender.sendMessage("Reloaded successfully.");
-            return true;
-        }
-
-        return false;
     }
 
     @EventHandler
