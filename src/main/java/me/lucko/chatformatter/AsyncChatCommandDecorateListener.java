@@ -14,20 +14,21 @@ import org.bukkit.event.Listener;
 public class AsyncChatCommandDecorateListener implements Listener {
     @SuppressWarnings("UnstableApiUsage")
     @EventHandler(priority = EventPriority.NORMAL)
-    public void onAsyncChatCommandDecorate(AsyncChatCommandDecorateEvent e){
-        Component message = e.originalMessage();
+    public void onAsyncChatCommandDecorate(AsyncChatCommandDecorateEvent e) {
+        if (e.player() != null) {
+            Component message = e.originalMessage();
 
-        if(e.player().hasPermission("vaultchatformatter.clickablelinks") || e.player().isOp()){
-            message = message.replaceText(TextReplacementConfig
-                    .builder()
-                    .match(ChatFormatterPlugin.URL_REGEX)
-                    .replacement((c) -> c.clickEvent(ClickEvent.openUrl(c.content().startsWith("http") ? c.content() : "https://" + c.content())))
-                    .build());
+            if (e.player().hasPermission("vaultchatformatter.clickablelinks") || e.player().isOp()) {
+                message = message.replaceText(TextReplacementConfig
+                        .builder()
+                        .match(ChatFormatterPlugin.URL_REGEX)
+                        .replacement((c) -> c.clickEvent(ClickEvent.openUrl(c.content().startsWith("http") ? c.content() : "https://" + c.content())))
+                        .build());
+            }
+
+            message = message.color(TextColor.fromHexString("#ededed"));
+
+            e.result(message);
         }
-
-        message = message.color(TextColor.fromHexString("#ededed"));
-
-        e.result(message);
     }
-
 }
